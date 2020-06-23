@@ -18,89 +18,31 @@
 				<th>Home Score</th>
 				<th>Opp. Score</th>
 			</tr>
-				<td>Aug. 31, 2019</td>
-				<td>Colorado State</td>
-				<td>45</td>
-				<td>13</td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>Sept. 8, 2019</td>
-				<td>Nebraska</td>
-				<td>33</td>
-				<td>28</td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>Sept. 15, 2019</td>
-				<td>New Hampshire</td>
-				<td>45</td>
-				<td>14</td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>Sept. 28, 2019</td>
-				<td>UCLA</td>
-				<td>38</td>
-				<td>16</td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>Oct. 6, 2019</td>
-				<td>Arizona State</td>
-				<td>28</td>
-				<td>21</td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>Oct. 13, 2019</td>
-				<td>Southern California</td>
-				<td>20</td>
-				<td>31</td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>Oct. 20, 2019</td>
-				<td>Washington</td>
-				<td>13</td>
-				<td>27</td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>Oct. 27, 2019</td>
-				<td>Oregon State</td>
-				<td>34</td>
-				<td>41</td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>Nov. 2, 2019</td>
-				<td>Arizona</td>
-				<td>34</td>
-				<td>42</td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>Nov. 10, 2019</td>
-				<td>Washington State</td>
-				<td>7</td>
-				<td>31</td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>Nov. 17, 2019</td>
-				<td>Utah</td>
-				<td>7</td>
-				<td>30</td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>Nov. 24, 2019</td>
-				<td>California</td>
-				<td>21</td>
-				<td>33</td>
-				<td></td>
-			</tr>
+			<% for (var i =0; i < Number(result_2) + Number(result_3);  i++ ) { %>
+				
+				<tr>
+					<td>
+						<%= result_1[i].game_date %>
+					</td>
+					<td>
+						<%= result_1[i].visitor_name %>
+					</td>
+					<td>
+						<%= result_1[i].home_score %>
+					</td>
+					<td>
+						<%= result_1[i].visitor_score %>
+					</td>
+					<td>
+						<% if(result_1[i].home_score > result_1[i].visitor_score ){ %>
+							<%= 'CU Boulder' %> 
+						<% } %>
+						<% if(result_1[i].home_score < result_1[i].visitor_score ){ %>
+							<%= result_1[i].visitor_name %> 
+						<% } %>
+					</td>
+				</tr>
+				<% } %>
 		</table>
 		<br>
 		<table class="table text-center">
@@ -110,9 +52,11 @@
 			</tr>
 			<tr>
 				<td> <!-- TODO: Display the total number of wins here.  
-							    This value should come from your server.js files query, don't calculate it in this file! --></td>
+								This value should come from your server.js files query, don't calculate it in this file! -->
+						<%=result_2%></td>			
 				<td> <!-- TODO: Display the total number of losses here.  
-							    This value should come from your server.js files query, don't calculate it in this file! --></td>
+								This value should come from your server.js files query, don't calculate it in this file! -->
+							<%=result_3%></td>
 			</tr>
 		</table>
 		

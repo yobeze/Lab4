@@ -188,6 +188,117 @@ app.post('/home/pick_color', function(req, res) {
     });
 });
 
+app.get('/team_stats', function(req, res) {
+    var query1 =  'select * from football_games;';
+    var query2 =  'select count(*) from football_games where home_score > visitor_score;';
+    var query3 =  'select count(*) from football_games where home_score < visitor_score;';
+
+    /** 1. Retrieve all of the football games in the Fall 2018 Season
+        2. Count the number of winning games in the Fall 2018 Season
+        3. Count the number of lossing games in the Fall 2018 Season
+         */
+    db.task('get-everything', task => {
+        return task.batch([
+            task.any(query1),
+            task.any(query2),
+            task.any(query3)
+        ]);
+    })
+    .then(data => {
+    
+        res.render('pages/team_stats',{
+                my_title: "Team Stats",
+                result_1: data[0],
+                result_2: data[1][0].count,
+                result_3: data[2][0].count
+            })
+    })
+    .catch(err => {
+        // display error message in case an error
+            console.log('error', err);
+            res.render('pages/team_stats',{
+                my_title: "Team Stats",
+                result_1: '',
+                result_2: '',
+                result_3: ''
+            })
+    });
+});
+
+app.get('/player_info', function(req, res) {
+	var query =  'select id, name from football_players;';
+
+	/** This route will handle a single query to the football_players table which will retrieve the id & name for all of the football players.
+	Next it will pass this result to the player_info view (pages/player_info), which will use the ids & names to populate the select tag for a form*/
+	db.any(query)
+		.then(function(rows) {
+		
+			res.render('pages/player_info',{
+					my_title: "Player Information",
+					result_1: rows,
+					result_2: '',
+					result_3: ''
+
+				})
+		})
+		.catch(err => {
+				console.log('error', err);
+				res.render('pages/player_info',{
+					my_title: "Player Information",
+					result_1: ''
+				})
+		});
+});
+
+app.get('/player_info/select_player', function(req, res) {
+	var player_id = req.query.player_choice;
+	console.log(player_id);
+	var quer1 =  'select id, name from football_players;';
+	var quer2 =  'select * from football_players where id = '+player_id+';';
+	console.log(quer2);
+	var quer3 =  'select count(*) from football_players inner join football_games on football_players.id = any (football_games.players) where id = '+ player_id +'; ';
+
+	
+
+	/** /player_info/select_player - get request (player_id)
+	This route will handle three queries and a work with a single parameter.
+	Parameter:
+		player_id - this will be a single number that refers to the football player's id.
+	Queries:
+		1. Retrieve the user id's & names of the football players (just like in /player_info)
+		2. Retrieve the specific football player's informatioin from the football_players table
+		3. Retrieve the total number of football games the player has played*/
+	db.task('get-everything', task => {
+		return task.batch([
+			task.any(quer1),
+			task.any(quer2),
+			task.any(quer3)
+		]);
+	})
+	.then(data => {
+		
+			console.log(data[0][0].id);
+			console.log(data[0][0].name);
+			console.log(data);
+		res.render('pages/player_info',{
+				my_title: "Select player",
+				result_1: data[0],
+				result_2: data[1][0],
+				result_3: data[2][0].count
+			})
+	})
+	.catch(err => {
+		// display error message in case an error
+			console.log('error', err);
+			res.render('pages/player_info',{
+				my_title: "Select Player",
+				result_1: '',
+				result_2: '',
+				result_3: '',
+			})
+	});
+});
+
 app.listen(3000);
 console.log('3000 is the magic port');
 
